@@ -143,6 +143,12 @@ class WebglGlobeElement extends HTMLElement {
         material = new THREE.LineBasicMaterial({color: 0x888888, linewidth: 3})
         objects.push(new THREE.Line(geometry, material))
         break
+      case 'Point':
+        points = [this.getUnitSphereCoordinates(feature.geometry.coordinates)]
+        geometry = new THREE.BufferGeometry().setFromPoints(points)
+        material = new THREE.PointsMaterial({color: 0x888888, size: 3})
+        objects.push(new THREE.Points(geometry, material))
+        break
       case 'MultiLineString':
         feature.geometry.coordinates.forEach(coordinates => {
           const points = coordinates.map(this.getUnitSphereCoordinates)
@@ -150,6 +156,12 @@ class WebglGlobeElement extends HTMLElement {
           const material = new THREE.LineBasicMaterial({color: 0x888888, linewidth: 3})
           objects.push(new THREE.Line(geometry, material))
         })
+        break
+      case 'MultiPoint':
+        points = feature.geometry.coordinates.map(this.getUnitSphereCoordinates)
+        geometry = new THREE.BufferGeometry().setFromPoints(points)
+        material = new THREE.PointsMaterial({color: 0x888888, size: 3})
+        objects.push(new THREE.Points(geometry, material))
         break
     }
 
