@@ -18,11 +18,11 @@ class WebglGlobeElement extends HTMLElement {
   async connectedCallback() {
     this.scene = new THREE.Scene()
 
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000)
+    this.camera = new THREE.PerspectiveCamera(45, this.clientWidth / this.clientHeight, 0.01, 1000)
     this.camera.position.z = 3
 
     this.renderer = new THREE.WebGLRenderer({alpha: true})
-    this.renderer.setSize(window.innerWidth, window.innerHeight)
+    this.renderer.setSize(this.clientWidth, this.clientHeight)
     this.appendChild(this.renderer.domElement)
 
     this.sphere = this.getSphere(0.998)
@@ -46,6 +46,13 @@ class WebglGlobeElement extends HTMLElement {
     this.scene.add(this.glow)
     this.scene.add(this.sun)
 
+    this.resizeObserver = new ResizeObserver(entries => {
+      this.camera = new THREE.PerspectiveCamera(45, this.clientWidth / this.clientHeight, 0.01, 1000)
+      this.camera.position.z = 3
+      this.renderer.setSize(this.clientWidth, this.clientHeight)
+    })
+    this.resizeObserver.observe(this)
+
     this.render()
   }
 
@@ -59,6 +66,8 @@ class WebglGlobeElement extends HTMLElement {
     this.geojson = null
     this.glow = null
     this.sun = null
+    this.resizeObserver.unobserve(this)
+    this.resizeObserver = null
     this.innerHTML = ''
   }
 
