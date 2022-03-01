@@ -174,6 +174,11 @@ class WebglGlobeElement extends HTMLElement {
           })
         })
         break
+      case 'GeometryCollection':
+        feature.geometry.geometries.forEach(geometry => {
+          objects.push.apply(objects, this.getGeoJSONFeature({geometry}))
+        })
+        break
     }
 
     return objects
